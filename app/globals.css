@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-family: 'IRANSans', system-ui, -apple-system, sans-serif;
+  }
+  
+  html {
+    font-family: var(--font-family);
+    data-scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply text-gray-800 bg-gray-50;
+  }
+  
+  /* RTL specific */
+  [dir="rtl"] {
+    text-align: right;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+  
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 
+           bg-blue-600 text-white px-6 py-3 rounded-lg font-medium 
+           hover:bg-blue-700 active:bg-blue-800 
+           transition-all duration-200 
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+           disabled:opacity-70 disabled:cursor-not-allowed;
+  }
+  
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 
+           border-2 border-blue-600 text-blue-600 
+           px-6 py-3 rounded-lg font-medium 
+           hover:bg-blue-50 active:bg-blue-100 
+           transition-all duration-200 
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+           disabled:opacity-70 disabled:cursor-not-allowed;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl shadow-sm hover:shadow-md 
+           transition-all duration-200 p-6 
+           border border-gray-100/50;
+  }
+  
+  .section-title {
+    @apply text-3xl sm:text-4xl font-bold text-gray-900 mb-4;
+  }
+  
+  .section-subtitle {
+    @apply text-lg text-gray-600 max-w-2xl mx-auto;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 
+           border border-gray-300 rounded-lg 
+           focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+           outline-none transition-all duration-200
+           bg-white text-gray-900;
+  }
+  
+  .input-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+}
