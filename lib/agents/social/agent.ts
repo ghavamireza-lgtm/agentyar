@@ -11,7 +11,7 @@ export async function runSocialAgent(userMessage: string) {
     system: SOCIAL_SYSTEM_PROMPT,
     prompt: userMessage,
     tools: socialTools,
-    stopWhen: stepCountIs(5), // ← اینجوری بنویس
+    stopWhen: stepCountIs(3),
   });
 
   return result;
@@ -23,6 +23,6 @@ export function streamSocialAgent(messages: any[]) {
     system: SOCIAL_SYSTEM_PROMPT,
     messages,
     tools: socialTools,
-    stopWhen: stepCountIs(5), // ← اینجا هم همین
+    stopWhen: stepCountIs(3),
   });
 }
