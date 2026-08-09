@@ -3,7 +3,7 @@ import { generateText, streamText, stepCountIs } from 'ai';
 import { SOCIAL_SYSTEM_PROMPT } from './prompts';
 import { socialTools } from './tools';
 
-const model = groq('qwen/qwen3.6-27b');
+const model = groq('lIama-3.3-70b-versatile');
 
 export async function runSocialAgent(userMessage: string) {
   const result = await generateText({
