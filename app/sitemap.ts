@@ -1,41 +1,40 @@
-// src/app/sitemap.ts
 import type { MetadataRoute } from 'next'
-import {  Agents } from '../lib/db'
+import { getAllAgentIds } from '@/data/agents'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://agentyar.ir'
-  
-  const staticPages = [
+
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
+      changeFrequency: 'monthly',
       priority: 1,
     },
     {
       url: `${baseUrl}/category/real-estate`,
       lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
+      changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/category/marketing`,
       lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
+      changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/pricing`,
       lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
+      changeFrequency: 'monthly',
       priority: 0.6,
     },
   ]
 
-  const agentPages = getAllAgentIds().map(({ id }) => ({
+  const agentPages: MetadataRoute.Sitemap = getAllAgentIds().map(({ id }) => ({
     url: `${baseUrl}/agent/${id}`,
     lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+    changeFrequency: 'weekly',
     priority: 0.7,
   }))
 

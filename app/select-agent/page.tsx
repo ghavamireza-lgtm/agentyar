@@ -22,7 +22,7 @@ export default function SelectAgentPage() {
           {agentsList.map((agent) => (
             <Link
               key={agent.id}
-              href={`/agent/${agent.id}/activate`}
+              href={`/agent/${agent.id}`}
               className="card hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col"
             >
               <div className="text-5xl mb-4">{agent.icon}</div>

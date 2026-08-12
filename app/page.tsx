@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { categories } from '../data/agents'
+import { categories } from '@/data/agents'
+import type { Agent, Category } from '@/types'
 
 export default function HomePage() {
   const steps = [
@@ -57,7 +58,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {Object.values(categories).map((category: { id: string; icon: string; title: string; description: string; agents: { id: string; name: string }[] }) => (
+            {Object.values(categories).map((category: Category) => (
               <Link 
                 key={category.id}
                 href={`/category/${category.id}`}
@@ -69,7 +70,7 @@ export default function HomePage() {
                 </h3>
                 <p className="text-gray-600 mb-4">{category.description}</p>
                 <div className="flex flex-wrap gap-2">
-                  {category.agents.map((agent: { id: string; name: string }) => (
+                  {category.agents.map((agent: Agent) => (
                     <span 
                       key={agent.id}
                       className="bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm"
@@ -115,7 +116,7 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="py-16 sm:py-20">
         <div className="container-custom">
-          <div className="bg-primary-600 rounded-3xl p-8 sm:p-12 text-center text-blue">
+          <div className="bg-primary-600 rounded-3xl p-8 sm:p-12 text-center text-white">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">آماده‌اید شروع کنید؟</h2>
             <p className="text-base sm:text-lg mb-8 opacity-90 max-w-2xl mx-auto">
               همین حالا یکی از دستیارهای هوشمند را انتخاب کنید و از قدرت هوش مصنوعی برای کسب‌وکار خود استفاده کنید

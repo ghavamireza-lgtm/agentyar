@@ -1,20 +1,28 @@
-// category/[slug]/
-
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getCategoryBySlug } from '../../../data/agents'
+import type { Metadata } from 'next'
+import { getCategoryBySlug } from '@/data/agents'
 
 interface CategoryPageProps {
-  params: Promise<{
-    slug: string
-  }>
+  params: Promise<{ slug: string }>
 }
 
 export async function generateStaticParams() {
-  return [
-    { slug: 'real-estate' },
-    { slug: 'marketing' }
-  ]
+  return [{ slug: 'real-estate' }, { slug: 'marketing' }]
+}
+
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const category = getCategoryBySlug(slug)
+
+  if (!category) {
+    return { title: 'دسته‌بندی یافت نشد' }
+  }
+
+  return {
+    title: category.title,
+    description: category.description,
+  }
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
@@ -28,7 +36,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   return (
     <div className="py-12">
       <div className="container-custom">
-        {/* Category Header */}
         <div className="mb-12">
           <div className="flex items-center gap-4 mb-4">
             <span className="text-5xl">{category.icon}</span>
@@ -39,16 +46,15 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         </div>
 
-        {/* Agents Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          {category.agents.map((agent: { id: string; name: string; icon: string; description: string }) => (
+          {category.agents.map((agent) => (
             <Link
               key={agent.id}
               href={`/agent/${agent.id}`}
               className="card hover:shadow-xl transition-all duration-300 group"
             >
               <div className="flex items-start gap-4">
-                <div className="text-4xl flex-shrink-0">{agent.icon}</div>
+                <div className="text-4xl shrink-0">{agent.icon}</div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
                     {agent.name}

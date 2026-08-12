@@ -7,11 +7,11 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const withAgents = searchParams.get('withAgents') === 'true'
   
-  let categories = db.getCategories()
-  
-  if (!withAgents) {
-    categories = categories.map(({ agents, ...rest }) => rest)
+  const categories = db.getCategories()
+
+  if (withAgents) {
+    return successResponse(categories)
   }
-  
-  return successResponse(categories)
+
+  return successResponse(categories.map(({ agents: _agents, ...rest }) => rest))
 }
