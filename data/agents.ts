@@ -64,6 +64,37 @@ const marketingAgents: Agent[] = [
   },
 ]
 
+const socialAgents: Agent[] = [
+  {
+    id: 'sales-content',
+    name: 'تولیدکننده محتوای فروش',
+    category: 'فروش و بازاریابی',
+    description: 'محتوای فروش حرفه‌ای برای محصولات و خدمات شما',
+    icon: '📝',
+    fields: [
+      { id: 'product_name', label: 'نام محصول یا خدمت', type: 'text', placeholder: 'مثلاً نرم‌افزار مدیریت فروش', required: true },
+      { id: 'target_audience', label: 'مخاطب هدف', type: 'text', placeholder: 'مثلاً صاحبان کسب‌وکارهای کوچک', required: true },
+      { id: 'problem', label: 'مشکلی که حل می‌کند', type: 'textarea', placeholder: 'توضیح دهید محصول شما چه مشکلی را حل می‌کند', required: true },
+      { id: 'features', label: 'ویژگی‌های کلیدی', type: 'textarea', placeholder: 'ویژگی‌های مهم محصول را لیست کنید', required: true },
+      { id: 'tone', label: 'لحن محتوا', type: 'select', options: ['حرفه‌ای', 'صمیمی', 'فنی', 'الهام‌بخش'], required: true },
+    ],
+  },
+  {
+    id: 'competitor-analyzer',
+    name: 'تحلیل‌گر رقبا',
+    category: 'فروش و بازاریابی',
+    description: 'تحلیل هوشمند رقبا و دریافت راهکارهای رقابتی',
+    icon: '🔍',
+    fields: [
+      { id: 'industry', label: 'صنعت', type: 'text', placeholder: 'مثلاً فناوری اطلاعات', required: true },
+      { id: 'competitors', label: 'نام رقبا', type: 'textarea', placeholder: 'نام رقبای اصلی خود را وارد کنید', required: true },
+      { id: 'strengths', label: 'نقاط قوت شما', type: 'textarea', placeholder: 'نقاط قوت کسب‌وکار خود را بنویسید', required: true },
+      { id: 'weaknesses', label: 'نقاط ضعف شما', type: 'textarea', placeholder: 'نقاط ضعف کسب‌وکار خود را بنویسید', required: true },
+      { id: 'goals', label: 'اهداف رقابتی', type: 'textarea', placeholder: 'اهداف خود در رقابت با دیگران را مشخص کنید', required: false },
+    ],
+  },
+]
+
 export const categories: Record<string, Category> = {
   'real-estate': {
     id: 'real-estate',
@@ -79,6 +110,13 @@ export const categories: Record<string, Category> = {
     icon: '📊',
     agents: marketingAgents,
   },
+    social: {
+    id: 'social',
+    title: 'محتوای شبکه اجتماعی',
+    description: 'دستیارهای هوشمند برای تولید محتوا و تحلیل رقبا',
+    icon: '📊',
+    agents: socialAgents,
+  },
 }
 
 export const pricingPlans: PricingPlan[] = [
@@ -93,15 +131,25 @@ export const pricingPlans: PricingPlan[] = [
     buttonVariant: 'outline',
   },
   {
+    id: 'plus',
+    name: 'تجاری',
+    price: '۲۹۰٬۰۰۰',
+    currency: 'تومان/ماه',
+    description: 'مناسب برای کسب‌وکارهای متوسط',
+    features: ['دسترسی به تمام دستیارها', 'درخواست نامحدود', 'پشتیبانی اختصاصی', 'خروجی پیشرفته', 'اولویت پردازش'],
+    buttonText: 'شروع تجاری',
+    buttonVariant: 'primary',
+    popular: true,
+  },
+  {
     id: 'professional',
     name: 'حرفه‌ای',
-    price: '۲۹۰٬۰۰۰',
+    price: '۹۹۰٬۰۰۰',
     currency: 'تومان/ماه',
     description: 'مناسب برای کسب‌وکارهای حرفه‌ای',
     features: ['دسترسی به تمام دستیارها', 'درخواست نامحدود', 'پشتیبانی اختصاصی', 'خروجی پیشرفته', 'اولویت پردازش'],
     buttonText: 'شروع حرفه‌ای',
     buttonVariant: 'primary',
-    popular: true,
   },
 ]
 

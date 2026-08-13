@@ -4,7 +4,7 @@ import { pricingPlans } from '@/data/agents'
 
 export const metadata: Metadata = {
   title: 'تعرفه‌ها',
-  description: 'پلن‌های رایگان و حرفه‌ای ایجنت‌یار',
+  description: 'پلن‌های رایگان و حرفه‌ای ایجنت‌لاین',
 }
 
 export default function PricingPage() {
@@ -18,7 +18,7 @@ export default function PricingPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-3 gap-8 max-w-6xl mx-auto">
           {pricingPlans.map((plan) => (
             <div
               key={plan.id}

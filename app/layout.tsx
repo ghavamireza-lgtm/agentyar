@@ -6,28 +6,28 @@ import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
   title: {
-    default: 'ایجنت‌یار | دستیارهای هوشمند فارسی',
-    template: '%s | ایجنت‌یار'
+    default: 'ایجنت‌لاین | دستیارهای هوشمند فارسی',
+    template: '%s | ایجنت‌لاین'
   },
   description: 'استفاده از دستیارهای هوش مصنوعی برای کسب‌وکارهای ایرانی',
   keywords: ['هوش مصنوعی', 'دستیار هوشمند', 'کسب و کار', 'املاک', 'بازاریابی'],
-  authors: [{ name: 'AgentYar' }],
-  creator: 'AgentYar',
-  publisher: 'AgentYar',
+  authors: [{ name: 'AgentLine' }],
+  creator: 'AgentLine',
+  publisher: 'AgentLine',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://agentyar.ir'),
+  metadataBase: new URL('https://agentline.ir'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'ایجنت‌یار | دستیارهای هوشمند فارسی',
+    title: 'ایجنت‌لاین | دستیارهای هوشمند فارسی',
     description: 'استفاده از دستیارهای هوش مصنوعی برای کسب‌وکارهای ایرانی',
-    url: 'https://agentyar.ir',
-    siteName: 'ایجنت‌یار',
+    url: 'https://agentline.ir',
+    siteName: 'ایجنت‌لاین',
     locale: 'fa_IR',
     type: 'website',
   },

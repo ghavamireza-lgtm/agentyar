@@ -14,7 +14,7 @@ export default function Footer() {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">یا</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">ایجنت‌یار</span>
+              <span className="text-xl font-bold text-gray-900">ایجنت‌لاین</span>
             </Link>
             <p className="text-gray-600 text-sm">
               دستیارهای هوشمند فارسی برای کسب‌وکارهای ایرانی
@@ -45,15 +45,15 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-gray-900 mb-4">ارتباط با ما</h4>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li>ایمیل: support@agentyar.ir</li>
-              <li>تلگرام: @AgentYar</li>
+              <li>ایمیل: support@agentline.ir</li>
+              <li>تلگرام: @AgentLine</li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-200 mt-8 pt-8 text-center text-sm text-gray-500">
-          <p>© {currentYear} ایجنت‌یار. تمامی حقوق محفوظ است.</p>
+          <p>© {currentYear} ایجنت‌لاین. تمامی حقوق محفوظ است.</p>
         </div>
       </div>
     </footer>
