@@ -112,10 +112,10 @@ export default async function DashboardPage() {
               Agentهای من
             </h2>
             <Link
-              href="/"
+              href="/agent-runs"
               className="text-sm font-medium text-blue-600 hover:text-blue-700"
             >
-              مشاهده همه
+              تاریخچه ←
             </Link>
           </div>
 

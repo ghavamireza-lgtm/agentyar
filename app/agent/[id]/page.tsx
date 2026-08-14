@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getAgentById, getAllAgentIds, categories } from '@/data/agents'
 import AgentForm from '@/components/agents/AgentForm'
+import ActivateAgentButton from '@/components/agents/ActivateAgentButton'
 
 interface AgentPageProps {
   params: Promise<{ id: string }>
@@ -55,7 +56,7 @@ export default async function AgentPage({ params }: AgentPageProps) {
         <div className="mb-8">
           <div className="flex items-start gap-4 mb-4">
             <span className="text-5xl">{agent.icon}</span>
-            <div>
+            <div className="flex-1">
               <span className="inline-block bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-sm font-medium mb-2">
                 {agent.category}
               </span>
@@ -64,6 +65,8 @@ export default async function AgentPage({ params }: AgentPageProps) {
           </div>
           <p className="text-lg text-gray-600 leading-relaxed">{agent.description}</p>
         </div>
+
+        <ActivateAgentButton agent={agent} />
 
         <AgentForm agent={agent} />
       </div>

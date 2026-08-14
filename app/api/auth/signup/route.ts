@@ -36,6 +36,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
+    // ایجاد پروفایل کاربر
+    if (data.user) {
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .insert({
+          id: data.user.id,
+          name,
+          email,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
+
+      if (profileError) {
+        console.error("Profile creation error:", profileError);
+        // این خطا قاتل نیست، کاربر تا حدی ثبت‌شد
+      }
+    }
+
     // اگر تأیید ایمیل فعال باشه، session ممکنه null باشه
     if (!data.session) {
       return NextResponse.json({

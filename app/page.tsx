@@ -36,7 +36,7 @@ export default function HomePage() {
               بدون نیاز به تخصص فنی، از قدرت هوش مصنوعی برای رشد کسب‌وکار خود استفاده کنید
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/category/real-estate" className="btn-primary">
+              <Link href="/select-category" className="btn-primary">
                 شروع کنید
               </Link>
               <Link href="/pricing" className="btn-outline">
