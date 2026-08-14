@@ -1,14 +1,23 @@
-// app/api/auth/signup/route.ts
-import { createClient } from "../../../../lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password } = await request.json();
+    const body = await request.json().catch(() => ({}));
+    const name = typeof body.name === "string" ? body.name.trim() : "";
+    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+    const password = typeof body.password === "string" ? body.password : "";
 
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: "همه فیلدها الزامی هستند" },
+        { status: 400 }
+      );
+    }
+
+    if (name.length < 2) {
+      return NextResponse.json(
+        { error: "نام باید حداقل ۲ کاراکتر باشد" },
         { status: 400 }
       );
     }
@@ -22,51 +31,50 @@ export async function POST(request: Request) {
 
     const supabase = await createClient();
 
+    // name → user_metadata تا تریگر handle_new_user آن را در profiles بنویسد
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: {
-          name,
-        },
+        data: { name },
       },
     });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      const lower = error.message.toLowerCase();
+      const msg =
+        lower.includes("already registered") || lower.includes("already been registered")
+          ? "این ایمیل قبلاً ثبت شده است"
+          : lower.includes("password")
+            ? "رمز عبور معتبر نیست"
+            : error.message;
+
+      return NextResponse.json({ error: msg }, { status: 400 });
     }
 
-    // ایجاد پروفایل کاربر
-    if (data.user) {
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .insert({
-          id: data.user.id,
-          name,
-          email,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        });
-
-      if (profileError) {
-        console.error("Profile creation error:", profileError);
-        // این خطا قاتل نیست، کاربر تا حدی ثبت‌شد
-      }
+    if (!data.user) {
+      return NextResponse.json(
+        { error: "ثبت‌نام انجام نشد. لطفاً دوباره تلاش کنید." },
+        { status: 400 }
+      );
     }
 
-    // اگر تأیید ایمیل فعال باشه، session ممکنه null باشه
+    // پروفایل توسط تریگر on_auth_user_created ساخته می‌شود — اینجا کاری نمی‌کنیم
+
     if (!data.session) {
       return NextResponse.json({
-        message: "ثبت‌نام موفق بود. لطفاً ایمیل خود را تأیید کنید.",
+        success: true,
         needsConfirmation: true,
+        message: "ثبت‌نام موفق بود. لطفاً ایمیل خود را تأیید کنید.",
       });
     }
 
     return NextResponse.json({
+      success: true,
       user: {
-        id: data.user?.id,
-        email: data.user?.email,
-        name: data.user?.user_metadata?.name,
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.user_metadata?.name ?? name,
       },
     });
   } catch (err) {

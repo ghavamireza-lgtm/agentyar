@@ -1,4 +1,3 @@
-// app/signup/page.tsx
 "use client";
 
 import Link from "next/link";
@@ -11,11 +10,13 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.SyntheticEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     setLoading(true);
 
     try {
@@ -33,7 +34,7 @@ export default function SignupPage() {
       }
 
       if (data.needsConfirmation) {
-        setError(data.message);
+        setSuccess(data.message || "ثبت‌نام موفق بود. ایمیل خود را تأیید کنید.");
         return;
       }
 
@@ -69,6 +70,12 @@ export default function SignupPage() {
             </div>
           )}
 
+          {success && (
+            <div className="mb-4 rounded-xl bg-green-50 px-4 py-3 text-sm text-green-700">
+              {success}
+            </div>
+          )}
+
           <div className="space-y-4">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-slate-700">
@@ -77,10 +84,12 @@ export default function SignupPage() {
               <input
                 type="text"
                 required
+                minLength={2}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="نام شما"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                disabled={loading || !!success}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
               />
             </div>
 
@@ -94,7 +103,8 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                disabled={loading || !!success}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
               />
             </div>
 
@@ -109,24 +119,27 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="حداقل ۸ کاراکتر"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                disabled={loading || !!success}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
               />
             </div>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-6 w-full rounded-xl bg-gradient-to-l from-blue-600 to-blue-500 py-2.5 text-sm font-medium text-white shadow-sm hover:from-blue-700 hover:to-blue-600 disabled:opacity-60"
-          >
-            {loading ? "در حال ثبت‌نام..." : "ثبت‌نام"}
-          </button>
+          {!success && (
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-6 w-full rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? "در حال ثبت‌نام..." : "ثبت‌نام"}
+            </button>
+          )}
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-600">
-          قبلاً حساب دارید؟{" "}
+          حساب دارید؟{" "}
           <Link href="/login" className="font-medium text-blue-600 hover:text-blue-700">
-            وارد شوید
+            ورود
           </Link>
         </p>
       </div>

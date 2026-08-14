@@ -53,13 +53,29 @@ export default function ActivateAgentButton({ agent }: ActivateAgentButtonProps)
   if (isActivated) {
     return (
       <div className="card border-green-200 bg-green-50 mb-8">
-        <div className="flex items-center gap-3">
+        <div className="flex items-start gap-3">
           <span className="text-2xl">✓</span>
-          <div>
+          <div className="flex-1">
             <h3 className="font-semibold text-green-900">دستیار فعال شد</h3>
             <p className="text-sm text-green-700 mt-0.5">
-              اکنون می‌توانید از این دستیار استفاده کنید
+              اکنون می‌توانید از این دستیار استفاده کنید و به داشبورد خود برگردید.
             </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => router.push('/dashboard')}
+                className="btn-primary"
+              >
+                رفتن به داشبورد
+              </button>
+              <button
+                type="button"
+                onClick={() => router.refresh()}
+                className="btn-outline"
+              >
+                ادامه استفاده
+              </button>
+            </div>
           </div>
         </div>
       </div>

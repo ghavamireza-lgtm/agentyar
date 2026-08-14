@@ -1,9 +1,11 @@
-import { createClient } from "../../../../lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const body = await request.json().catch(() => ({}));
+    const email = typeof body.email === "string" ? body.email.trim() : "";
+    const password = typeof body.password === "string" ? body.password : "";
 
     if (!email || !password) {
       return NextResponse.json(
@@ -30,7 +32,7 @@ export async function POST(request: Request) {
       user: {
         id: data.user?.id,
         email: data.user?.email,
-        name: data.user?.user_metadata?.name,
+        name: data.user?.user_metadata?.name ?? null,
       },
     });
   } catch (err) {
