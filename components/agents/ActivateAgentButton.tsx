@@ -11,29 +11,31 @@ interface ActivateAgentButtonProps {
 export default function ActivateAgentButton({ agent }: ActivateAgentButtonProps) {
   const [isActivating, setIsActivating] = useState(false)
   const [isActivated, setIsActivated] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [activationError, setActivationError] = useState<string | null>(null)
   const router = useRouter()
 
   const handleActivate = async () => {
     setIsActivating(true)
     setActivationError(null)
+    setSuccessMessage(null)
 
     try {
       const res = await fetch('/api/agents/activate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          agent_id: agent.id,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agent_id: agent.id }),
       })
 
       const data = await res.json()
 
-      if (!res.ok || !data.success) {
-        setActivationError(data.error || 'خطایی رخ داد')
+      // قبلاً فعال بوده = موفقیت نرم
+      const alreadyActive =
+        typeof data.error === 'string' &&
+        data.error.includes('قبلاً')
 
+      if ((!res.ok || !data.success) && !alreadyActive) {
+        setActivationError(data.error || 'خطایی رخ داد')
         if (res.status === 401) {
           router.push('/login')
         }
@@ -41,6 +43,15 @@ export default function ActivateAgentButton({ agent }: ActivateAgentButtonProps)
       }
 
       setIsActivated(true)
+      setSuccessMessage(
+        data.message ||
+          (alreadyActive
+            ? 'این دستیار از قبل برای شما فعال است'
+            : 'دستیار با موفقیت فعال شد')
+      )
+
+      // داشبورد و لیست agentهای فعال را به‌روز کن
+      router.refresh()
     } catch (error) {
       setActivationError(
         error instanceof Error ? error.message : 'خطایی در ارتباط رخ داد'
@@ -53,29 +64,23 @@ export default function ActivateAgentButton({ agent }: ActivateAgentButtonProps)
   if (isActivated) {
     return (
       <div className="card border-green-200 bg-green-50 mb-8">
-        <div className="flex items-start gap-3">
+        <div className="flex items-center gap-3">
           <span className="text-2xl">✓</span>
-          <div className="flex-1">
-            <h3 className="font-semibold text-green-900">دستیار فعال شد</h3>
+          <div>
+            <h3 className="font-semibold text-green-900">
+              {successMessage || 'دستیار فعال شد'}
+            </h3>
             <p className="text-sm text-green-700 mt-0.5">
-              اکنون می‌توانید از این دستیار استفاده کنید و به داشبورد خود برگردید.
+              اکنون می‌توانید فرم زیر را پر کنید و نتیجه بگیرید. از داشبورد هم
+              قابل مشاهده است.
             </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => router.push('/dashboard')}
-                className="btn-primary"
-              >
-                رفتن به داشبورد
-              </button>
-              <button
-                type="button"
-                onClick={() => router.refresh()}
-                className="btn-outline"
-              >
-                ادامه استفاده
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => router.push('/dashboard')}
+              className="mt-3 text-sm font-medium text-green-800 underline hover:text-green-900"
+            >
+              رفتن به داشبورد ←
+            </button>
           </div>
         </div>
       </div>

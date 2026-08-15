@@ -160,7 +160,7 @@ export default async function DashboardPage() {
                     </span>
 
                     <Link
-                      href={`/agent/${item.agent?.id}`}
+                      href={`/agent/${item.agent?.slug}`}
                       className="rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-700 hover:bg-blue-100"
                     >
                       مدیریت
@@ -200,7 +200,7 @@ export default async function DashboardPage() {
                 </p>
 
                 <Link
-                  href={`/agent/${agent.id}`}
+                  href={`/agent/${agent.slug}`}
                   className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
                 >
                   مشاهده و فعال‌سازی
