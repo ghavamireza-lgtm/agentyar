@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { pricingPlans } from '@/data/agents'
+import { pricingPlans } from '@/data/pricing'
 
 export const metadata: Metadata = {
   title: 'تعرفه‌ها',
@@ -50,7 +50,7 @@ export default function PricingPage() {
               </ul>
 
               <Link
-                href="/category/real-estate"
+                href="/signup"
                 className={plan.buttonVariant === 'primary' ? 'btn-primary w-full text-center' : 'btn-outline w-full text-center'}
               >
                 {plan.buttonText}

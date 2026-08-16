@@ -69,15 +69,49 @@ function FormFieldInput({
 
 export default function AgentForm({ agent }: AgentFormProps) {
   const [formData, setFormData] = useState<Record<string, string>>({})
-  const [submitted, setSubmitted] = useState(false)
+  const [output, setOutput] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (fieldId: string, value: string) => {
     setFormData((prev) => ({ ...prev, [fieldId]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setSubmitted(true)
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setLoading(true)
+    setOutput(null)
+    setError(null)
+
+    try {
+      const response = await fetch(`/api/agents/${agent.slug}/run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input: formData }),
+      })
+
+      const data = await response.json()
+
+      if (response.status === 401) {
+        const next = encodeURIComponent(`/agent/${agent.slug}`)
+        window.location.href = `/login?next=${next}`
+        return
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || 'اجرای دستیار ناموفق بود.')
+      }
+
+      setOutput(data.output ?? '')
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'خطایی هنگام اجرای دستیار رخ داد.',
+      )
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -87,8 +121,9 @@ export default function AgentForm({ agent }: AgentFormProps) {
           <div key={field.id}>
             <label htmlFor={field.id} className="input-label">
               {field.label}
-              {field.required && <span className="text-red-500 mr-1">*</span>}
+              {field.required && <span className="mr-1 text-red-500">*</span>}
             </label>
+
             <FormFieldInput
               field={field}
               value={formData[field.id] ?? ''}
@@ -97,21 +132,30 @@ export default function AgentForm({ agent }: AgentFormProps) {
           </div>
         ))}
 
-        <button type="submit" className="btn-primary w-full sm:w-auto">
-          دریافت نتیجه
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-primary w-full sm:w-auto"
+        >
+          {loading ? 'در حال پردازش...' : 'دریافت نتیجه'}
         </button>
       </form>
 
-      {submitted && (
-        <div className="card border-primary-200 bg-primary-50">
-          <h3 className="text-lg font-bold text-gray-900 mb-3">نتیجه</h3>
-          <div className="rounded-xl bg-white border border-gray-200 p-6 text-gray-500 text-center">
-            <p className="text-4xl mb-3">🤖</p>
-            <p className="text-sm leading-relaxed">
-              پاسخ هوش مصنوعی به‌زودی اینجا نمایش داده می‌شود.
-              <br />
-              اتصال به سرویس AI در مرحله بعد فعال خواهد شد.
-            </p>
+      {error && (
+        <div className="card border border-red-200 bg-red-50 text-red-700">
+          {error}
+        </div>
+      )}
+
+      {output && (
+        <div className="card border border-primary-200 bg-primary-50">
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-lg font-bold text-gray-900">نتیجه</h3>
+            <span className="text-xs font-medium text-green-700">انجام شد</span>
+          </div>
+
+          <div className="whitespace-pre-wrap rounded-xl border border-gray-200 bg-white p-6 leading-8 text-gray-800">
+            {output}
           </div>
         </div>
       )}

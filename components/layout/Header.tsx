@@ -1,46 +1,62 @@
-// src/components/layout/Header.tsx
 'use client'
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 const navigation = [
   { name: 'خانه', href: '/' },
   { name: 'املاک', href: '/category/real-estate' },
   { name: 'بازاریابی', href: '/category/marketing' },
+  { name: 'شبکه اجتماعی', href: '/category/social' },
   { name: 'تعرفه‌ها', href: '/pricing' },
 ]
 
 export default function Header() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  const isActive = (path: string) => {
+  useEffect(() => {
+    const supabase = createClient()
+
+    supabase.auth.getUser().then(({ data }) => {
+      setIsAuthenticated(Boolean(data.user))
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(Boolean(session?.user))
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const is_active = (path: string) => {
     if (path === '/') return pathname === path
     return pathname?.startsWith(path) ?? false
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">یا</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+              <span className="text-sm font-bold text-white">یا</span>
             </div>
             <span className="text-xl font-bold text-gray-900">ایجنت‌لاین</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden items-center gap-6 md:flex">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={`text-sm font-medium transition-colors ${
-                  isActive(item.href)
+                  is_active(item.href)
                     ? 'text-blue-600'
                     : 'text-gray-600 hover:text-blue-600'
                 }`}
@@ -48,48 +64,43 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
+
+            <Link
+              href={isAuthenticated ? '/dashboard' : '/login'}
+              className="rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+            >
+              {isAuthenticated ? 'داشبورد' : 'ورود'}
+            </Link>
           </nav>
 
-          {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="rounded-lg p-2 hover:bg-gray-100 md:hidden"
+            onClick={() => setIsMenuOpen((open) => !open)}
             aria-label="منو"
           >
             <svg
-              className="w-6 h-6"
+              className="h-6 w-6"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
               {isMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
+          <div className="border-t border-gray-200 py-4 md:hidden">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`block py-2 text-base font-medium transition-colors ${
-                  isActive(item.href)
+                className={`block py-2 text-base font-medium ${
+                  is_active(item.href)
                     ? 'text-blue-600'
                     : 'text-gray-600 hover:text-blue-600'
                 }`}
@@ -98,6 +109,14 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
+
+            <Link
+              href={isAuthenticated ? '/dashboard' : '/login'}
+              className="mt-2 block border-t border-gray-100 pt-3 font-medium text-blue-600"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {isAuthenticated ? 'داشبورد' : 'ورود'}
+            </Link>
           </div>
         )}
       </div>

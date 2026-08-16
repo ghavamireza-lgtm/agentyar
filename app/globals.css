@@ -15,16 +15,12 @@
 }
 
 @layer base {
-  :root {
-    --font-family: 'IRANSans', system-ui, -apple-system, sans-serif;
-  }
-  
   html {
-    font-family: var(--font-family);
-    data-scroll-behavior: smooth;
+    scroll-behavior: smooth;
   }
   
   body {
+    font-family: var(--font-iran-sans), sans-serif;
     @apply text-gray-800 bg-gray-50;
   }
   

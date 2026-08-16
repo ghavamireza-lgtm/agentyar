@@ -1,50 +1,60 @@
-// lib/agents/index.ts
-type AgentInput = {
-  text: string;
-};
+import { groq } from '@ai-sdk/groq'
+import { generateText } from 'ai'
+import type { Agent } from '@/types'
 
-type AgentOutput = {
-  text: string;
-};
+const model = groq('llama-3.3-70b-versatile')
 
-export async function runAgent(
-  slug: string,
-  input: AgentInput
-): Promise<AgentOutput> {
-  switch (slug) {
-    case "sales-marketing":
-      return runSalesMarketingAgent(input);
-    case "real-estate":
-      return {
-        text: "Agent املاک به‌زودی فعال می‌شود. فعلاً از Agent بازاریابی استفاده کنید.",
-      };
-    case "social-content":
-      return {
-        text: "Agent شبکه‌های اجتماعی به‌زودی فعال می‌شود.",
-      };
-    default:
-      throw new Error("این Agent پشتیبانی نمی‌شود");
-  }
+function formatInput(input: Record<string, unknown>) {
+  return Object.entries(input)
+    .map(([key, value]) => `${key}: ${String(value ?? '').trim()}`)
+    .filter((line) => line.split(': ').slice(1).join(': ').trim())
+    .join('\n')
 }
 
-async function runSalesMarketingAgent(input: AgentInput): Promise<AgentOutput> {
-  // نسخه موقت بدون LLM — فقط برای تست فلو
-  // بعداً اینجا OpenAI/Claude را وصل می‌کنیم
+function buildSystemPrompt(agent: Agent) {
+  const fields = agent.fields
+    .map((field) => `- ${field.label} (${field.id})`)
+    .join('\n')
 
-  const text = input.text.trim();
+  return `
+تو دستیار هوشمند «${agent.name}» در پلتفرم ایجنت‌یار هستی.
+
+حوزه: ${agent.category}
+توضیح: ${agent.description}
+
+فیلدهای ورودی این دستیار:
+${fields || '- ورودی آزاد'}
+
+قوانین:
+- پاسخ را به فارسی روان و طبیعی بده.
+- دقیقاً بر اساس اطلاعات کاربر پاسخ بده و اطلاعات ساختگی را به عنوان واقعیت مطرح نکن.
+- اگر داده‌ای برای نتیجه‌گیری کافی نیست، کمبود اطلاعات را واضح بگو و در صورت امکان فرض‌ها را جداگانه مشخص کن.
+- پاسخ را کاربردی، ساختاریافته و قابل استفاده ارائه کن.
+- از مقدمه‌های طولانی و کلی‌گویی خودداری کن.
+`
+}
+
+export async function runAgent(
+  agent: Agent,
+  input: Record<string, unknown>,
+) {
+  if (!process.env.GROQ_API_KEY) {
+    throw new Error('GROQ_API_KEY تنظیم نشده است.')
+  }
+
+  const inputText = formatInput(input)
+
+  if (!inputText) {
+    throw new Error('حداقل یک ورودی معتبر لازم است.')
+  }
+
+  const result = await generateText({
+    model,
+    system: buildSystemPrompt(agent),
+    prompt: `اطلاعات کاربر:\n${inputText}\n\nلطفاً وظیفه این دستیار را انجام بده و نتیجه نهایی را ارائه کن.`,
+  })
 
   return {
-    text: `✅ تحلیل اولیه بازاریابی
-
-📌 ورودی شما:
-${text}
-
-🎯 پیشنهادهای اولیه:
-1) یک پیام فروش کوتاه بنویس که روی درد مشتری تمرکز کند.
-2) یک کپشن اینستاگرام با CTA واضح آماده کن.
-3) یک ایمیل سرد ۳ پاراگرافی برای مخاطب هدف بساز.
-4) ۳ ایده کمپین ۷ روزه پیشنهاد بده.
-
-🚀 نسخه بعدی این Agent با مدل AI واقعی همین ساختار را کامل تولید می‌کند.`,
-  };
+    text: result.text,
+  }
 }

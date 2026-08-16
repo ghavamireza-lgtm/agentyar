@@ -1,13 +1,3 @@
-// src/types/index.ts
-export interface Agent {
-  id: string
-  name: string
-  category: string
-  description: string
-  icon: string
-  fields: FormField[]
-}
-
 export interface FormField {
   id: string
   label: string
@@ -15,6 +5,17 @@ export interface FormField {
   placeholder?: string
   options?: string[]
   required: boolean
+}
+
+export interface Agent {
+  id: string
+  slug: string
+  name: string
+  category: string
+  description: string
+  icon: string
+  fields: FormField[]
+  is_active: boolean
 }
 
 export interface Category {
@@ -37,14 +38,28 @@ export interface PricingPlan {
   popular?: boolean
 }
 
-export interface Submission {
-  id: number
+export interface AgentRun {
+  id: string
+  userId: string
   agentId: string
-  data: Record<string, string | number>
+  input: Record<string, unknown>
+  output: Record<string, unknown> | null
+  status: string
+  error: string | null
   createdAt: string
+  completedAt: string | null
 }
 
-export interface ApiResponse<T = any> {
+export interface UserAgent {
+  id: string
+  userId: string
+  agentId: string
+  status: string
+  activatedAt: string
+  agent: Agent
+}
+
+export interface ApiResponse<T = unknown> {
   success: boolean
   data?: T
   error?: string

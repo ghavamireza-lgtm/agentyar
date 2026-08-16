@@ -1,39 +1,36 @@
 import type { MetadataRoute } from 'next'
-import { getAllAgentIds } from '@/data/agents'
+import { getAgentSlugs } from '@/lib/db'
+import { categoryConfigs } from '@/data/categories'
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://agentyar.ir'
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://agentline.ir'
+  const now = new Date()
+  const agentSlugs = await getAgentSlugs()
 
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: 'monthly',
       priority: 1,
     },
-    {
-      url: `${baseUrl}/category/real-estate`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
+    ...categoryConfigs.map((category) => ({
+      url: `${baseUrl}/category/${category.id}`,
+      lastModified: now,
+      changeFrequency: 'weekly' as const,
       priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/category/marketing`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
+    })),
     {
       url: `${baseUrl}/pricing`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.6,
     },
   ]
 
-  const agentPages: MetadataRoute.Sitemap = getAllAgentIds().map(({ id }) => ({
-    url: `${baseUrl}/agent/${id}`,
-    lastModified: new Date(),
+  const agentPages: MetadataRoute.Sitemap = agentSlugs.map((slug) => ({
+    url: `${baseUrl}/agent/${slug}`,
+    lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.7,
   }))

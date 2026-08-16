@@ -1,8 +1,36 @@
 // src/app/layout.tsx
+
+import localFont from "next/font/local";
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+
+const iranSans = localFont({
+  src: [
+    {
+      path: "../fonts/IRANSans/IRANSans-light.woff2",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../fonts/IRANSans/IRANSans.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../fonts/IRANSans/IRANSans-bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../fonts/IRANSans/IRANSans-black.woff2",
+      weight: "900",
+      style: "normal",
+    },
+  ],
+  variable: "--font-iran-sans",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -58,7 +86,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fa" dir="rtl">
-      <body className="font-sans antialiased bg-gray-50 min-h-screen flex flex-col">
+      <body className={`${iranSans.variable} antialiased bg-gray-50 min-h-screen flex flex-col`}>
         <Header />
         <main className="flex-1">
           {children}
