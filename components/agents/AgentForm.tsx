@@ -1,30 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import type { Agent, FormField } from '@/types'
 
 interface AgentFormProps {
   agent: Agent
 }
 
-interface ApiResponse {
-  success: boolean
-  output?: string
-  error?: string
-  run_id?: string
-}
-
 function FormFieldInput({
   field,
   value,
   onChange,
-  disabled,
 }: {
   field: FormField
   value: string
   onChange: (value: string) => void
-  disabled?: boolean
 }) {
   const baseClass = 'input-field'
 
@@ -37,7 +27,6 @@ function FormFieldInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={field.placeholder}
         required={field.required}
-        disabled={disabled}
         rows={4}
         className={baseClass}
       />
@@ -52,7 +41,6 @@ function FormFieldInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         required={field.required}
-        disabled={disabled}
         className={baseClass}
       >
         <option value="">انتخاب کنید...</option>
@@ -74,7 +62,6 @@ function FormFieldInput({
       onChange={(e) => onChange(e.target.value)}
       placeholder={field.placeholder}
       required={field.required}
-      disabled={disabled}
       className={baseClass}
     />
   )
@@ -141,7 +128,6 @@ export default function AgentForm({ agent }: AgentFormProps) {
               field={field}
               value={formData[field.id] ?? ''}
               onChange={(value) => handleChange(field.id, value)}
-              disabled={loading}
             />
           </div>
         ))}
@@ -171,30 +157,6 @@ export default function AgentForm({ agent }: AgentFormProps) {
           <div className="whitespace-pre-wrap rounded-xl border border-gray-200 bg-white p-6 leading-8 text-gray-800">
             {output}
           </div>
-        </div>
-      )}
-
-      {submitted && response && (
-        <div className="card border-green-200 bg-green-50">
-          <div className="mb-4 flex items-center gap-2">
-            <h3 className="text-lg font-bold text-green-900">✅ نتیجه دریافت شد</h3>
-            <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-              ID: {response.run_id}
-            </span>
-          </div>
-          <div className="rounded-xl bg-white border border-green-200 p-6 text-gray-800 text-right whitespace-pre-wrap text-sm leading-relaxed">
-            {response.output}
-          </div>
-          <button
-            onClick={() => {
-              setSubmitted(false)
-              setFormData({})
-              setResponse(null)
-            }}
-            className="mt-4 text-sm font-medium text-green-600 hover:text-green-700"
-          >
-            سوال جدید ←
-          </button>
         </div>
       )}
     </div>

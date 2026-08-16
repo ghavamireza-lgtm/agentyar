@@ -23,7 +23,8 @@
     font-family: var(--font-iran-sans), sans-serif;
     @apply text-gray-800 bg-gray-50;
   }
-
+  
+  /* RTL specific */
   [dir="rtl"] {
     text-align: right;
   }

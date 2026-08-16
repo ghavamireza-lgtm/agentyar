@@ -79,10 +79,10 @@ export default async function DashboardPage() {
           <div className="mb-5 flex items-center justify-between">
             <h2 className="text-base font-semibold text-slate-900">Agentهای من</h2>
             <Link
-              href="/agent-runs"
+              href="/"
               className="text-sm font-medium text-blue-600 hover:text-blue-700"
             >
-              تاریخچه ←
+              مشاهده همه
             </Link>
           </div>
 
